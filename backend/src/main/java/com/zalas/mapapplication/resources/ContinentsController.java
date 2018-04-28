@@ -29,10 +29,10 @@ public class ContinentsController {
     }
 
     @GetMapping("/{continentId}")
-    public ResponseEntity<Continent> get(@PathVariable("continentId") long continentId) throws ElementNotFoundException {
+    public Continent get(@PathVariable("continentId") long continentId) throws ElementNotFoundException {
         Optional<Continent> continent = continentsRepository.findById(continentId);
         if (continent.isPresent()) {
-            return new ResponseEntity<>(continent.get(), HttpStatus.OK);
+            return continent.get();
         }
         throw new ElementNotFoundException("Continent with id=" + continentId + " not found!");
     }
@@ -43,13 +43,13 @@ public class ContinentsController {
     }
 
     @DeleteMapping("/{continentId}")
-    public ResponseEntity<Continent> delete(@PathVariable("continentId") long continentId) throws ElementNotFoundException {
+    public void delete(@PathVariable("continentId") long continentId) throws ElementNotFoundException {
         Optional<Continent> continent = continentsRepository.findById(continentId);
         if (continent.isPresent()) {
             continentsRepository.delete(continent.get());
-            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            throw new ElementNotFoundException("Continent with id=" + continentId + " not found!");
         }
-        throw new ElementNotFoundException("Continent with id=" + continentId + " not found!");
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
