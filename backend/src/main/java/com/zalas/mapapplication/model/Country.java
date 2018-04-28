@@ -3,7 +3,7 @@ package com.zalas.mapapplication.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity
@@ -30,7 +30,7 @@ public class Country {
         return id;
     }
 
-    @NotNull
+    @NotBlank
     public String getName() {
         return name;
     }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "city")
@@ -28,7 +27,7 @@ public class City {
         return id;
     }
 
-    @NotNull
+    @NotBlank
     public String getName() {
         return name;
     }
