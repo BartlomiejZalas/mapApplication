@@ -65,7 +65,7 @@ public class CountriesController {
         Optional<Continent> continent = continentsRepository.findById(continentId);
         if (continent.isPresent()) {
             Country savedCountry = countriesRepository.save(new Country(0, country.getName(), continent.get(), null));
-            return prepareResonse(ucb, savedCountry);
+            return prepareResponse(ucb, savedCountry);
         }
         throw new ElementNotFoundException("Continent with id=" + continentId + " not found!");
 
@@ -77,7 +77,7 @@ public class CountriesController {
         }
     }
 
-    private ResponseEntity<Country> prepareResonse(UriComponentsBuilder ucb, Country savedCountry) {
+    private ResponseEntity<Country> prepareResponse(UriComponentsBuilder ucb, Country savedCountry) {
         URI locationUri = ucb.path(COUNTRIES_PATH + "/").path(String.valueOf(savedCountry.getId())).build().toUri();
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(locationUri);
