@@ -44,10 +44,8 @@ public class CountriesController {
     @GetMapping
     public List<Country> getAll(@RequestParam(required = false) Optional<Long> continentId) throws ElementNotFoundException {
         if (continentId.isPresent()) {
-            if (continentsRepository.findById(continentId.get()).isPresent()) {
-                return countriesRepository.findByContinentId(continentId.get());
-            }
-            throw new ElementNotFoundException("Continent with id=" + continentId.get() + " not found!");
+            validateContinent(continentId);
+            return countriesRepository.findByContinentId(continentId.get());
         }
         return countriesRepository.findAll();
     }
@@ -71,6 +69,12 @@ public class CountriesController {
         }
         throw new ElementNotFoundException("Continent with id=" + continentId + " not found!");
 
+    }
+
+    private void validateContinent(@RequestParam(required = false) Optional<Long> continentId) throws ElementNotFoundException {
+        if (!continentsRepository.findById(continentId.get()).isPresent()) {
+            throw new ElementNotFoundException("Continent with id=" + continentId.get() + " not found!");
+        }
     }
 
     private ResponseEntity<Country> prepareResonse(UriComponentsBuilder ucb, Country savedCountry) {
