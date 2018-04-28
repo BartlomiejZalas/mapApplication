@@ -43,7 +43,7 @@ public class ContinentsControllerTest {
 
     @Test
     public void get_shouldReturnJsonRepresentationOfContinent_whenContinentExists() throws Exception {
-        Continent continent = new Continent(1, "Europe");
+        Continent continent = new Continent(1, "Europe", null);
         given(continentsRepository.findById(1l)).willReturn(Optional.of(continent));
 
         mockMvc.perform(get("/continents/1"))
@@ -62,7 +62,7 @@ public class ContinentsControllerTest {
 
     @Test
     public void findAll_shouldReturnAllContinentsFromRepository_whenThereAreContinents() throws Exception{
-        ArrayList<Continent> continents = newArrayList(new Continent(1, "Europe"), new Continent(2, "North America"));
+        ArrayList<Continent> continents = newArrayList(new Continent(1, "Europe", null), new Continent(2, "North America", null));
         given(continentsRepository.findAll()).willReturn(continents);
 
         mockMvc.perform(get("/continents"))
@@ -73,7 +73,7 @@ public class ContinentsControllerTest {
 
     @Test
     public void delete_shouldReturnSuccessStatus_whenContinentWasDeleted() throws Exception {
-        Continent continent = new Continent(1, "Europe");
+        Continent continent = new Continent(1, "Europe", null);
         given(continentsRepository.findById(1l)).willReturn(Optional.of(continent));
 
         mockMvc.perform(delete("/continents/1"))
@@ -90,8 +90,8 @@ public class ContinentsControllerTest {
 
     @Test
     public void save_shouldAddContinentToRepository() throws Exception {
-        Continent requestContinent = new Continent(0, "Europe");
-        Continent createdContinent = new Continent(1, "Europe");
+        Continent requestContinent = new Continent(0, "Europe", null);
+        Continent createdContinent = new Continent(1, "Europe", null);
         given(continentsRepository.save(argThat(new ContinentMatcher("Europe")))).willReturn(createdContinent);
 
         mockMvc.perform(post("/continents")
