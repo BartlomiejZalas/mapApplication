@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 @Table(name = "country")
@@ -11,14 +12,16 @@ public class Country {
     private long id;
     private String name;
     private Continent continent;
+    private Set<City> cities;
 
     public Country() {
     }
 
-    public Country(long id, String name, Continent continent) {
+    public Country(long id, String name, Continent continent, Set<City> cities) {
         this.id = id;
         this.name = name;
         this.continent = continent;
+        this.cities = cities;
     }
 
     @Id
@@ -39,6 +42,10 @@ public class Country {
         return continent;
     }
 
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
+    public Set<City> getCities() {
+        return cities;
+    }
 
     @Transient
     public String getContinentName() {
@@ -55,5 +62,9 @@ public class Country {
 
     public void setContinent(Continent continent) {
         this.continent = continent;
+    }
+
+    public void setCities(Set<City> cities) {
+        this.cities = cities;
     }
 }

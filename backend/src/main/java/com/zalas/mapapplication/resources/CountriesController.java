@@ -66,7 +66,7 @@ public class CountriesController {
     public ResponseEntity<Country> save(@RequestBody Country country, @RequestParam long continentId, UriComponentsBuilder ucb) throws ElementNotFoundException {
         Optional<Continent> continent = continentsRepository.findById(continentId);
         if (continent.isPresent()) {
-            Country savedCountry = countriesRepository.save(new Country(0, country.getName(), continent.get()));
+            Country savedCountry = countriesRepository.save(new Country(0, country.getName(), continent.get(), null));
             return prepareResonse(ucb, savedCountry);
         }
         throw new ElementNotFoundException("Continent with id=" + continentId + " not found!");

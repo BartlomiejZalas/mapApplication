@@ -52,7 +52,7 @@ public class CountriesControllerTest {
 
     @Test
     public void get_shouldReturnCountryForGivenId_whenCountryWithProvidedIdExists() throws Exception {
-        Country country = new Country(1, "Poland", new Continent());
+        Country country = new Country(1, "Poland", new Continent(), null);
         given(countriesRepository.findById(1l)).willReturn(Optional.of(country));
 
         mockMvc.perform(get("/countries/1"))
@@ -72,7 +72,7 @@ public class CountriesControllerTest {
 
     @Test
     public void getAll_shouldReturnAllCountries_whenNotContinentIdGiven() throws Exception {
-        ArrayList<Country> countries = newArrayList(new Country(1, "Europe", new Continent()), new Country(2, "North America", new Continent()));
+        ArrayList<Country> countries = newArrayList(new Country(1, "Europe", new Continent(), null), new Country(2, "North America", new Continent(), null));
         given(countriesRepository.findAll()).willReturn(countries);
 
         mockMvc.perform(get("/countries"))
@@ -83,7 +83,7 @@ public class CountriesControllerTest {
 
     @Test
     public void getAll_shouldReturnCountriesFromGivenContinent_whenContinentIdGiven() throws Exception {
-        ArrayList<Country> countries = newArrayList(new Country(1, "Europe", new Continent()));
+        ArrayList<Country> countries = newArrayList(new Country(1, "Europe", new Continent(), null));
         given(countriesRepository.findByContinentId(1)).willReturn(countries);
         given(continentsRepository.findById(1l)).willReturn(Optional.of(new Continent()));
 
@@ -103,7 +103,7 @@ public class CountriesControllerTest {
 
     @Test
     public void delete_shouldDeleteCountry_whenCorrectIdGiven() throws Exception {
-        Optional<Country> country = Optional.of(new Country(1, "Poland", new Continent()));
+        Optional<Country> country = Optional.of(new Country(1, "Poland", new Continent(), null));
         given(countriesRepository.findById(1l)).willReturn(country);
 
         mockMvc.perform(delete("/countries/1"))
@@ -120,7 +120,7 @@ public class CountriesControllerTest {
 
     @Test
     public void save_shouldSaveCountry_whenCorrectContinentGiven() throws Exception{
-        Country country = new Country(1, "Poland", new Continent());
+        Country country = new Country(1, "Poland", new Continent(), null);
         given(countriesRepository.save(argThat(new CountryMatcher("Poland")))).willReturn(country);
         given(continentsRepository.findById(1l)).willReturn(Optional.of(new Continent()));
 
@@ -138,7 +138,7 @@ public class CountriesControllerTest {
     public void save_shouldReturnError_whenIncorrectContinentGiven() throws Exception{
         mockMvc.perform(post("/countries?continentId=1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(asJson(new Country(1, "Poland", new Continent()))))
+                .content(asJson(new Country(1, "Poland", new Continent(), null))))
 
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
