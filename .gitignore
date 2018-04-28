@@ -1,2 +1,3 @@
 .idea/
 *.iml
+/frontend/map-app-gui/node_modules/
