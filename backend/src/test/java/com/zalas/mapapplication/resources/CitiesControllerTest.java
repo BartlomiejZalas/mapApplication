@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CitiesControllerTest {
 
     private static final City CITY = new City(1, "Walbrzych", new Country(1, "Poland", new Continent(), null));
-    private static final City ANOTHER_CITY = new City(1, "Wrocw", new Country(1, "Poland", new Continent(), null));
+    private static final City ANOTHER_CITY = new City(1, "Wroclaw", new Country(1, "Poland", new Continent(), null));
 
     private MockMvc mockMvc;
 
