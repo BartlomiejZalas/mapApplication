@@ -43,6 +43,7 @@ public class Country {
     }
 
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
+    @JsonIgnore
     public Set<City> getCities() {
         return cities;
     }

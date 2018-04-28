@@ -1,6 +1,8 @@
 package com.zalas.mapapplication.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
@@ -33,6 +35,7 @@ public class Continent {
     }
 
     @OneToMany(mappedBy = "continent", cascade = CascadeType.ALL)
+    @JsonIgnore
     public Set<Country> getCountries() {
         return countries;
     }
