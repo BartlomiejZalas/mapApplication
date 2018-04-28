@@ -53,10 +53,12 @@ public class ContinentsController {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Continent> save(@RequestBody Continent continent, UriComponentsBuilder ucb) {
-
+    public ResponseEntity<Continent> save(@RequestBody Continent continent, UriComponentsBuilder uriComponentsBuilder) {
         Continent savedContinent = continentsRepository.save(continent);
+        return createResponse(uriComponentsBuilder, savedContinent);
+    }
 
+    private ResponseEntity<Continent> createResponse(UriComponentsBuilder ucb, Continent savedContinent) {
         URI locationUri = ucb.path(CONTINENTS_PATH + "/").path(String.valueOf(savedContinent.getId())).build().toUri();
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(locationUri);
