@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.argThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -61,7 +62,7 @@ public class ContinentsControllerTest {
     }
 
     @Test
-    public void findAll_shouldReturnAllContinentsFromRepository_whenThereAreContinents() throws Exception{
+    public void findAll_shouldReturnAllContinentsFromRepository_whenThereAreContinents() throws Exception {
         ArrayList<Continent> continents = newArrayList(new Continent(1, "Europe", null), new Continent(2, "North America", null));
         given(continentsRepository.findAll()).willReturn(continents);
 
@@ -78,6 +79,7 @@ public class ContinentsControllerTest {
 
         mockMvc.perform(delete("/continents/1"))
                 .andExpect(status().isOk());
+        then(continentsRepository).should().delete(continent);
     }
 
     @Test

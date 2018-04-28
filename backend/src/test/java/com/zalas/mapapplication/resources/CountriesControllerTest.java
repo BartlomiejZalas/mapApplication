@@ -19,18 +19,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.BDDMockito.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CountriesControllerTest {
@@ -103,11 +99,12 @@ public class CountriesControllerTest {
 
     @Test
     public void delete_shouldDeleteCountry_whenCorrectIdGiven() throws Exception {
-        Optional<Country> country = Optional.of(new Country(1, "Poland", new Continent(), null));
-        given(countriesRepository.findById(1l)).willReturn(country);
+        Country country = new Country(1, "Poland", new Continent(), null);
+        given(countriesRepository.findById(1l)).willReturn(Optional.of(country));
 
         mockMvc.perform(delete("/countries/1"))
                 .andExpect(status().isOk());
+        then(countriesRepository).should().delete(country);
     }
 
     @Test
@@ -119,7 +116,7 @@ public class CountriesControllerTest {
     }
 
     @Test
-    public void save_shouldSaveCountry_whenCorrectContinentGiven() throws Exception{
+    public void save_shouldSaveCountry_whenCorrectContinentGiven() throws Exception {
         Country country = new Country(1, "Poland", new Continent(), null);
         given(countriesRepository.save(argThat(new CountryMatcher("Poland")))).willReturn(country);
         given(continentsRepository.findById(1l)).willReturn(Optional.of(new Continent()));
@@ -135,7 +132,7 @@ public class CountriesControllerTest {
     }
 
     @Test
-    public void save_shouldReturnError_whenIncorrectContinentGiven() throws Exception{
+    public void save_shouldReturnError_whenIncorrectContinentGiven() throws Exception {
         mockMvc.perform(post("/countries?continentId=1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(asJson(new Country(1, "Poland", new Continent(), null))))

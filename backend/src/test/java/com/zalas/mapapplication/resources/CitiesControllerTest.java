@@ -26,6 +26,7 @@ import java.util.Optional;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -158,6 +159,8 @@ public class CitiesControllerTest {
 
         mockMvc.perform(delete("/cities/1"))
                 .andExpect(status().isOk());
+
+        then(citiesRepository).should().delete(CITY);
     }
 
     @Test
