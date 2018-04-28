@@ -6,10 +6,10 @@ import com.zalas.mapapplication.model.City;
 import com.zalas.mapapplication.model.Continent;
 import com.zalas.mapapplication.model.Country;
 import com.zalas.mapapplication.repositories.CitiesRepository;
-import com.zalas.mapapplication.repositories.ContinentsRepository;
 import com.zalas.mapapplication.repositories.CountriesRepository;
 import com.zalas.mapapplication.resources.exceptionshandling.RestError;
 import com.zalas.mapapplication.resources.exceptionshandling.RestExceptionHandler;
+import com.zalas.mapapplication.services.CitiesFinder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,21 +34,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CitiesControllerTest {
 
     private static final City CITY = new City(1, "Walbrzych", new Country(1, "Poland", new Continent(), null));
-    private static final City ANOTHER_CITY = new City(1, "Wroclaw", new Country(1, "Poland", new Continent(), null));
 
     private MockMvc mockMvc;
 
     @Mock
-    private ContinentsRepository continentsRepository;
-    @Mock
     private CountriesRepository countriesRepository;
     @Mock
     private CitiesRepository citiesRepository;
+    @Mock
+    private CitiesFinder citiesFinder;
 
     @Before
     public void setUp() throws Exception {
         this.mockMvc = MockMvcBuilders
-                .standaloneSetup(new CitiesController(continentsRepository, countriesRepository, citiesRepository))
+                .standaloneSetup(new CitiesController(countriesRepository, citiesRepository, citiesFinder))
                 .setControllerAdvice(RestExceptionHandler.class)
                 .build();
     }
@@ -72,85 +71,14 @@ public class CitiesControllerTest {
     }
 
     @Test
-    public void getAll_shouldReturnAllCities_whenNoContinentAndCountryGivenInParams() throws Exception {
-        ArrayList<City> cities = newArrayList(CITY, ANOTHER_CITY);
-        given(citiesRepository.findAll()).willReturn(cities);
+    public void getAll_shouldDelegateToCitiesFinder() throws Exception {
+        ArrayList<City> cities = newArrayList(CITY);
+        given(citiesFinder.findCities(Optional.empty(), Optional.empty())).willReturn(cities);
 
         mockMvc.perform(get("/cities"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(content().string(asJson(cities)));
-    }
-
-    @Test
-    public void getAll_shouldReturnCitiesFromGiveCountry_whenCountryGivenInParam() throws Exception {
-        ArrayList<City> cities = newArrayList(CITY);
-        given(countriesRepository.findById(1L)).willReturn(Optional.of(new Country()));
-        given(citiesRepository.findByCountryId(1L)).willReturn(cities);
-
-        mockMvc.perform(get("/cities?countryId=1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(asJson(cities)));
-    }
-
-    @Test
-    public void getAll_shouldReturnCitiesFromGiveContinent_whenContinentGivenInParam() throws Exception {
-        ArrayList<City> cities = newArrayList(CITY);
-        given(continentsRepository.findById(1L)).willReturn(Optional.of(new Continent()));
-        given(citiesRepository.findByCountryContinentId(1L)).willReturn(cities);
-
-        mockMvc.perform(get("/cities?continentId=1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(asJson(cities)));
-    }
-
-    @Test
-    public void getAll_shouldReturnCitiesFromGiveContinentAndCountry_whenContinentAndCountryGivenInParams() throws Exception {
-        ArrayList<City> cities = newArrayList(CITY, ANOTHER_CITY);
-        given(continentsRepository.findById(1L)).willReturn(Optional.of(new Continent()));
-        given(countriesRepository.findById(1L)).willReturn(Optional.of(new Country()));
-        given(citiesRepository.findByCountryIdAndCountryContinentId(1L, 1L)).willReturn(cities);
-
-        mockMvc.perform(get("/cities?continentId=1&countryId=1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(asJson(cities)));
-    }
-
-    @Test
-    public void getAll_shouldReturnError_whenIncorrectContinentAndCorrectCountryGiven() throws Exception {
-        mockMvc.perform(get("/cities?continentId=42&countryId=1"))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(asJson(new RestError("Continent with id=42 not found!"))));
-    }
-
-    @Test
-    public void getAll_shouldReturnError_whenIncorrectCountryAndCorrectContinentGiven() throws Exception {
-        given(continentsRepository.findById(1L)).willReturn(Optional.of(new Continent()));
-
-        mockMvc.perform(get("/cities?continentId=1&countryId=42"))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(asJson(new RestError("Country with id=42 not found!"))));
-    }
-
-    @Test
-    public void getAll_shouldReturnError_whenIncorrectContinentGiven() throws Exception {
-        mockMvc.perform(get("/cities?continentId=42"))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(asJson(new RestError("Continent with id=42 not found!"))));
-    }
-
-    @Test
-    public void getAll_shouldReturnError_whenIncorrectCountryGiven() throws Exception {
-        mockMvc.perform(get("/cities?countryId=42"))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(asJson(new RestError("Country with id=42 not found!"))));
     }
 
     @Test

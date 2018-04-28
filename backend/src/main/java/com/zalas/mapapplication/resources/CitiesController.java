@@ -3,9 +3,9 @@ package com.zalas.mapapplication.resources;
 import com.zalas.mapapplication.model.City;
 import com.zalas.mapapplication.model.Country;
 import com.zalas.mapapplication.repositories.CitiesRepository;
-import com.zalas.mapapplication.repositories.ContinentsRepository;
 import com.zalas.mapapplication.repositories.CountriesRepository;
 import com.zalas.mapapplication.resources.exceptionshandling.ElementNotFoundException;
+import com.zalas.mapapplication.services.CitiesFinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,15 +24,15 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CitiesController {
     static final String CITIES_PATH = "cities";
 
-    private ContinentsRepository continentsRepository;
     private CountriesRepository countriesRepository;
     private CitiesRepository citiesRepository;
+    private CitiesFinder citiesFinder;
 
     @Autowired
-    public CitiesController(ContinentsRepository continentsRepository, CountriesRepository countriesRepository, CitiesRepository citiesRepository) {
-        this.continentsRepository = continentsRepository;
+    public CitiesController(CountriesRepository countriesRepository, CitiesRepository citiesRepository, CitiesFinder citiesFinder) {
         this.countriesRepository = countriesRepository;
         this.citiesRepository = citiesRepository;
+        this.citiesFinder = citiesFinder;
     }
 
     @GetMapping("/{cityId}")
@@ -47,20 +47,8 @@ public class CitiesController {
     @GetMapping
     public List<City> getAll(
             @RequestParam(required = false) Optional<Long> continentId,
-            @RequestParam(required = false) Optional<Long> countryId
-    ) throws ElementNotFoundException {
-        if (continentId.isPresent() && countryId.isPresent()) {
-            validateContinent(continentId.get());
-            validateCountry(countryId.get());
-            return citiesRepository.findByCountryIdAndCountryContinentId(countryId.get(), continentId.get());
-        } else if (continentId.isPresent()) {
-            validateContinent(continentId.get());
-            return citiesRepository.findByCountryContinentId(continentId.get());
-        } else if (countryId.isPresent()) {
-            validateCountry(countryId.get());
-            return citiesRepository.findByCountryId(countryId.get());
-        }
-        return citiesRepository.findAll();
+            @RequestParam(required = false) Optional<Long> countryId) throws ElementNotFoundException {
+        return citiesFinder.findCities(continentId, countryId);
     }
 
     @DeleteMapping("/{cityId}")
@@ -83,15 +71,9 @@ public class CitiesController {
         return prepareResponse(ucb, savedCity);
     }
 
-    private void validateCountry(@RequestParam(required = false) long countryId) throws ElementNotFoundException {
+    private void validateCountry(long countryId) throws ElementNotFoundException {
         if (!countriesRepository.findById(countryId).isPresent()) {
             throw new ElementNotFoundException("Country with id=" + countryId + " not found!");
-        }
-    }
-
-    private void validateContinent(@RequestParam(required = false) long continentId) throws ElementNotFoundException {
-        if (!continentsRepository.findById(continentId).isPresent()) {
-            throw new ElementNotFoundException("Continent with id=" + continentId + " not found!");
         }
     }
 
