@@ -29,6 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class ContinentsControllerTest {
 
+    private static final Continent CONTINENT = new Continent(1, "Europe", null);
+
     private MockMvc mockMvc;
 
     @Mock
@@ -44,13 +46,12 @@ public class ContinentsControllerTest {
 
     @Test
     public void get_shouldReturnJsonRepresentationOfContinent_whenContinentExists() throws Exception {
-        Continent continent = new Continent(1, "Europe", null);
-        given(continentsRepository.findById(1l)).willReturn(Optional.of(continent));
+        given(continentsRepository.findById(1L)).willReturn(Optional.of(CONTINENT));
 
         mockMvc.perform(get("/continents/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(asJson(continent)));
+                .andExpect(content().string(asJson(CONTINENT)));
     }
 
     @Test
@@ -63,7 +64,7 @@ public class ContinentsControllerTest {
 
     @Test
     public void findAll_shouldReturnAllContinentsFromRepository_whenThereAreContinents() throws Exception {
-        ArrayList<Continent> continents = newArrayList(new Continent(1, "Europe", null), new Continent(2, "North America", null));
+        ArrayList<Continent> continents = newArrayList(CONTINENT, new Continent(2, "North America", null));
         given(continentsRepository.findAll()).willReturn(continents);
 
         mockMvc.perform(get("/continents"))
@@ -74,12 +75,11 @@ public class ContinentsControllerTest {
 
     @Test
     public void delete_shouldReturnSuccessStatus_whenContinentWasDeleted() throws Exception {
-        Continent continent = new Continent(1, "Europe", null);
-        given(continentsRepository.findById(1l)).willReturn(Optional.of(continent));
+        given(continentsRepository.findById(1L)).willReturn(Optional.of(CONTINENT));
 
         mockMvc.perform(delete("/continents/1"))
                 .andExpect(status().isOk());
-        then(continentsRepository).should().delete(continent);
+        then(continentsRepository).should().delete(CONTINENT);
     }
 
     @Test
@@ -92,17 +92,15 @@ public class ContinentsControllerTest {
 
     @Test
     public void save_shouldAddContinentToRepository() throws Exception {
-        Continent requestContinent = new Continent(0, "Europe", null);
-        Continent createdContinent = new Continent(1, "Europe", null);
-        given(continentsRepository.save(argThat(new ContinentMatcher("Europe")))).willReturn(createdContinent);
+        given(continentsRepository.save(argThat(new ContinentMatcher("Europe")))).willReturn(CONTINENT);
 
         mockMvc.perform(post("/continents")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(asJson(requestContinent)))
+                .content(asJson(CONTINENT)))
 
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(asJson(createdContinent)))
+                .andExpect(content().string(asJson(CONTINENT)))
                 .andExpect(header().string("Location", "http://localhost/continents/1"));
     }
 
@@ -113,7 +111,7 @@ public class ContinentsControllerTest {
     class ContinentMatcher implements ArgumentMatcher<Continent> {
         private String expectedName;
 
-        public ContinentMatcher(String expectedName) {
+        ContinentMatcher(String expectedName) {
             this.expectedName = expectedName;
         }
 

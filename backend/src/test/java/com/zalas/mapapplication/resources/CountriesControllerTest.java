@@ -31,6 +31,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class CountriesControllerTest {
 
+    private static final Country COUNTRY = new Country(1, "Poland", new Continent(), null);
+    private static final Country ANOTHER_COUNTRY = new Country(1, "Germany", new Continent(), null);
+
     private MockMvc mockMvc;
 
     @Mock
@@ -48,18 +51,16 @@ public class CountriesControllerTest {
 
     @Test
     public void get_shouldReturnCountryForGivenId_whenCountryWithProvidedIdExists() throws Exception {
-        Country country = new Country(1, "Poland", new Continent(), null);
-        given(countriesRepository.findById(1l)).willReturn(Optional.of(country));
+        given(countriesRepository.findById(1L)).willReturn(Optional.of(COUNTRY));
 
         mockMvc.perform(get("/countries/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(asJson(country)));
+                .andExpect(content().string(asJson(COUNTRY)));
     }
 
     @Test
     public void get_shouldReturnError_whenCountryWithProvidedIdDoesNotExist() throws Exception {
-
         mockMvc.perform(get("/countries/1"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -68,7 +69,7 @@ public class CountriesControllerTest {
 
     @Test
     public void getAll_shouldReturnAllCountries_whenNotContinentIdGiven() throws Exception {
-        ArrayList<Country> countries = newArrayList(new Country(1, "Europe", new Continent(), null), new Country(2, "North America", new Continent(), null));
+        ArrayList<Country> countries = newArrayList(COUNTRY, ANOTHER_COUNTRY);
         given(countriesRepository.findAll()).willReturn(countries);
 
         mockMvc.perform(get("/countries"))
@@ -79,9 +80,9 @@ public class CountriesControllerTest {
 
     @Test
     public void getAll_shouldReturnCountriesFromGivenContinent_whenContinentIdGiven() throws Exception {
-        ArrayList<Country> countries = newArrayList(new Country(1, "Europe", new Continent(), null));
+        ArrayList<Country> countries = newArrayList(COUNTRY);
         given(countriesRepository.findByContinentId(1)).willReturn(countries);
-        given(continentsRepository.findById(1l)).willReturn(Optional.of(new Continent()));
+        given(continentsRepository.findById(1L)).willReturn(Optional.of(new Continent()));
 
         mockMvc.perform(get("/countries?continentId=1"))
                 .andExpect(status().isOk())
@@ -99,12 +100,11 @@ public class CountriesControllerTest {
 
     @Test
     public void delete_shouldDeleteCountry_whenCorrectIdGiven() throws Exception {
-        Country country = new Country(1, "Poland", new Continent(), null);
-        given(countriesRepository.findById(1l)).willReturn(Optional.of(country));
+        given(countriesRepository.findById(1L)).willReturn(Optional.of(COUNTRY));
 
         mockMvc.perform(delete("/countries/1"))
                 .andExpect(status().isOk());
-        then(countriesRepository).should().delete(country);
+        then(countriesRepository).should().delete(COUNTRY);
     }
 
     @Test
@@ -117,17 +117,16 @@ public class CountriesControllerTest {
 
     @Test
     public void save_shouldSaveCountry_whenCorrectContinentGiven() throws Exception {
-        Country country = new Country(1, "Poland", new Continent(), null);
-        given(countriesRepository.save(argThat(new CountryMatcher("Poland")))).willReturn(country);
-        given(continentsRepository.findById(1l)).willReturn(Optional.of(new Continent()));
+        given(countriesRepository.save(argThat(new CountryMatcher("Poland")))).willReturn(COUNTRY);
+        given(continentsRepository.findById(1L)).willReturn(Optional.of(new Continent()));
 
         mockMvc.perform(post("/countries?continentId=1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(asJson(country)))
+                .content(asJson(COUNTRY)))
 
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(content().string(asJson(country)))
+                .andExpect(content().string(asJson(COUNTRY)))
                 .andExpect(header().string("Location", "http://localhost/countries/1"));
     }
 
@@ -135,7 +134,7 @@ public class CountriesControllerTest {
     public void save_shouldReturnError_whenIncorrectContinentGiven() throws Exception {
         mockMvc.perform(post("/countries?continentId=1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(asJson(new Country(1, "Poland", new Continent(), null))))
+                .content(asJson(COUNTRY)))
 
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -149,7 +148,7 @@ public class CountriesControllerTest {
     class CountryMatcher implements ArgumentMatcher<Country> {
         private String expectedName;
 
-        public CountryMatcher(String expectedName) {
+        CountryMatcher(String expectedName) {
             this.expectedName = expectedName;
         }
 
