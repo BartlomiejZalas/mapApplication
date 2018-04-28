@@ -73,8 +73,6 @@ public class CitiesControllerTest {
     @Test
     public void getAll_shouldReturnAllCities_whenNoContinentAndCountryGivenInParams() throws Exception {
         ArrayList<City> cities = newArrayList(CITY, ANOTHER_CITY);
-//        given(countriesRepository.findById(1L)).willReturn(Optional.of(new Country()));
-//        given(countriesRepository.findById(1L)).willReturn(Optional.of(new Country()));
         given(citiesRepository.findAll()).willReturn(cities);
 
         mockMvc.perform(get("/cities"))
