@@ -5,5 +5,5 @@ import { Component } from '@angular/core';
   templateUrl: './cities.component.html',
 })
 export class CitiesComponent {
-  cities = [{name: "Wrocław", id: 1}]
+
 }

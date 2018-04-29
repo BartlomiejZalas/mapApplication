@@ -1,22 +1,12 @@
 <div class="panel panel-default">
   <div class="panel-heading"><b>Continents</b></div>
-  <div class="panel-body" style="padding: 0; margin: 0">
+  <div class="panel-body">
+    <location-table locationType="continents"></location-table>
 
-    <table class="table table-hover table-striped">
-      <thead class="thead-dark">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Continent Name</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let continent of continents">
-        <td>{{continent.id}}</td>
-        <td>{{continent.name}}</td>
-      </tr>
-      </tbody>
-    </table>
-
+    <a class="btn btn-success" routerLink="/continents/add">
+      <span class="glyphicon glyphicon-plus"></span> Add new continent
+    </a>
   </div>
 </div>
+
 

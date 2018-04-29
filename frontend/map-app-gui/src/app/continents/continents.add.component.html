@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+  <div class="panel-heading"><b>Add Continent</b></div>
+  <div class="panel-body">
+    <div *ngIf="saved" class="alert alert-success" role="alert">
+      <p>{{message}}</p>
+      <a routerLink="/continents">Go back to continents list</a>
+    </div>
+
+    <form *ngIf="!saved">
+      <div *ngFor="let error of errors" class="alert alert-danger" role="alert">
+        {{error}}
+      </div>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Name" #continentName>
+      </div>
+      <button type="submit" class="btn btn-success" (click)="save(continentName.value)">Save</button>
+    </form>
+  </div>
+</div>

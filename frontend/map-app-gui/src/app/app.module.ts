@@ -8,8 +8,11 @@ import {StartComponent} from "./start/start.component";
 import {ContinentsComponent} from "./continents/continents.component";
 import {CountriesComponent} from "./countries/countries.component";
 import {CitiesComponent} from "./cities/cities.component";
-import {ContinentsService} from "./services/continents.service";
 import {HttpClientModule} from "@angular/common/http";
+import {LocationTableComponent} from "./elements/location-table/location-table.component";
+import {LocationsService} from "./services/locations.service";
+import {ContinentsAddComponent} from "./continents/continents.add.component";
+import {FormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -18,14 +21,17 @@ import {HttpClientModule} from "@angular/common/http";
     StartComponent,
     ContinentsComponent,
     CountriesComponent,
-    CitiesComponent
+    CitiesComponent,
+    LocationTableComponent,
+    ContinentsAddComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
-  providers: [ContinentsService],
+  providers: [LocationsService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
