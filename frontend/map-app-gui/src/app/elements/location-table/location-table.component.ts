@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {LocationsService} from "../../services/locations.service";
 import {Location} from "../../model/location";
+import {ExtraColumn} from "../../model/extracolumn";
 
 @Component({
   selector: 'location-table',
@@ -9,6 +10,7 @@ import {Location} from "../../model/location";
 export class LocationTableComponent implements OnInit {
 
   @Input() locationType: string;
+  @Input() extraColumns: ExtraColumn[];
   locations: Location[];
   loading = true;
 
@@ -16,10 +18,10 @@ export class LocationTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getContinents();
+    this.getLocations();
   }
 
-  private getContinents() {
+  private getLocations() {
     this.loading = true;
     this.locationService.getLocations(this.locationType).subscribe(locations => {
       this.locations = locations;
@@ -30,7 +32,7 @@ export class LocationTableComponent implements OnInit {
   remove(location: Location): void {
     this.loading = true;
     this.locationService.removeLocation(this.locationType, location.id).subscribe(locations => {
-      this.getContinents()
+      this.getLocations()
     });
 
   }

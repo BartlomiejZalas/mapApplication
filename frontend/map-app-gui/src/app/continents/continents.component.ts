@@ -1,13 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'continents',
   templateUrl: './continents.component.html',
 })
-export class ContinentsComponent implements OnInit{
+export class ContinentsComponent {
 
-  ngOnInit(): void {
-  }
-
-
+  extraColumns = [];
 }

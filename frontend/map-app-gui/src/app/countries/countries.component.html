@@ -1,7 +1,7 @@
 <div class="panel panel-default">
   <div class="panel-heading"><b>Countries</b></div>
   <div class="panel-body">
-    <location-table locationType="countries"></location-table>
+    <location-table locationType="countries" [extraColumns]="extraColumns"></location-table>
 
     <a class="btn btn-success" routerLink="/countries/add">
       <span class="glyphicon glyphicon-plus"></span> Add new country

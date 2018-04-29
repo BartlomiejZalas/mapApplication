@@ -3,12 +3,13 @@
   <tr>
     <th scope="col">#</th>
     <th scope="col">Name</th>
+    <th *ngFor="let extraColumn of extraColumns" >{{extraColumn.presentationName}}</th>
     <th scope="col" style="width: 100px">Remove</th>
   </tr>
   </thead>
   <tbody *ngIf="loading">
   <tr>
-    <td colspan="2">
+    <td [colSpan]="2 + extraColumns.length">
       <div class="loader"></div>
     </td>
   </tr>
@@ -17,6 +18,7 @@
   <tr *ngFor="let location of locations">
     <td>{{location.id}}</td>
     <td>{{location.name}}</td>
+    <td *ngFor="let extraColumn of extraColumns" >{{location[extraColumn.attr]}}</td>
     <td>
       <button type="button" class="btn btn-danger" (click)="remove(location)">
         <span class="glyphicon glyphicon-remove"></span>
