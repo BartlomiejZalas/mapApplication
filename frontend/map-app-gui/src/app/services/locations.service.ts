@@ -17,8 +17,15 @@ export class LocationsService {
   constructor(private http: HttpClient) {
   }
 
-  getLocations(type: string): Observable<Location[]> {
-    return this.http.get<Location[]>(this.apiUrl + type)
+  getLocations(type: string, continentId: number = null, countryId: number = null,): Observable<Location[]> {
+    let continentParam = continentId == null ? null : 'continentId='+continentId;
+    let countryParam = countryId == null ? null : 'countryId='+countryId;
+    let additionalParams = [continentParam, countryParam].filter(v => v != null).join('&');
+    let url = this.apiUrl + type + '?' + additionalParams;
+
+    console.log("Request URL: " + url);
+
+    return this.http.get<Location[]>(url)
       .pipe(
         tap(locations => console.log('Fetched locations:', locations)),
         catchError(this.handleError('get' + type, []))

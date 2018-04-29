@@ -1,7 +1,7 @@
 <div class="panel panel-default">
   <div class="panel-heading"><b>Cities</b></div>
   <div class="panel-body">
-    <location-table locationType="cities" [extraColumns]="extraColumns"></location-table>
+    <location-table locationType="cities" [extraColumns]="extraColumns" [filterByContinent]="true" [filterByCountry]="true"></location-table>
 
     <a class="btn btn-success" routerLink="/cities/add">
       <span class="glyphicon glyphicon-plus"></span> Add new city

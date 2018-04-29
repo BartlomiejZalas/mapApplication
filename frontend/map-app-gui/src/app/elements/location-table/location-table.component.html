@@ -1,9 +1,28 @@
+<form class="form-inline">
+  <span *ngIf="filterByContinent" style="padding-right: 10px;">
+    <label>Search by Continent:</label>
+    <select class="form-control" #continent (change)="updateContinentFilter(continent.value)">
+      <option selected value="">All continents</option>
+      <option *ngFor="let continent of continents" value="{{continent.id}}">{{continent.name}}</option>
+    </select>
+  </span>
+  <span *ngIf="filterByCountry">
+    <label>Search by Country:</label>
+    <select class="form-control" #country (change)="updateCountryFilter(country.value)">
+      <option selected value="">All countries</option>
+      <option *ngFor="let country of countries" value="{{country.id}}">{{country.name}}</option>
+    </select>
+  </span>
+</form>
+
+<hr *ngIf="filterByContinent || filterByCountry">
+
 <table class="table table-hover table-striped">
   <thead class="thead-dark">
   <tr>
     <th scope="col">#</th>
     <th scope="col">Name</th>
-    <th *ngFor="let extraColumn of extraColumns" >{{extraColumn.presentationName}}</th>
+    <th *ngFor="let extraColumn of extraColumns">{{extraColumn.presentationName}}</th>
     <th scope="col" style="width: 100px">Remove</th>
   </tr>
   </thead>
@@ -18,7 +37,7 @@
   <tr *ngFor="let location of locations">
     <td>{{location.id}}</td>
     <td>{{location.name}}</td>
-    <td *ngFor="let extraColumn of extraColumns" >{{location[extraColumn.attr]}}</td>
+    <td *ngFor="let extraColumn of extraColumns">{{location[extraColumn.attr]}}</td>
     <td>
       <button type="button" class="btn btn-danger" (click)="remove(location)">
         <span class="glyphicon glyphicon-remove"></span>
