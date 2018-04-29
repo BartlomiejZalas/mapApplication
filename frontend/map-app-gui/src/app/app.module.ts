@@ -14,6 +14,7 @@ import {LocationsService} from "./services/locations.service";
 import {ContinentsAddComponent} from "./continents/continents.add.component";
 import {FormsModule} from "@angular/forms";
 import {CountriesAddComponent} from "./countries/countries.add.component";
+import {CitiesAddComponent} from "./cities/cities.add.component";
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {CountriesAddComponent} from "./countries/countries.add.component";
     CitiesComponent,
     LocationTableComponent,
     ContinentsAddComponent,
-    CountriesAddComponent
+    CountriesAddComponent,
+    CitiesAddComponent
   ],
   imports: [
     BrowserModule,

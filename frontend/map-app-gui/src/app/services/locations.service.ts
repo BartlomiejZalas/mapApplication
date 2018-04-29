@@ -6,6 +6,7 @@ import {of} from "rxjs/observable/of";
 import {Location} from "../model/location";
 import {Continent} from "app/model/continent";
 import {Country} from "../model/country";
+import {City} from "../model/city";
 
 const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
 
@@ -48,6 +49,14 @@ export class LocationsService {
     )
   }
 
+
+  addCity(name: string, countryId: number) {
+    const url = this.apiUrl + 'cities?countryId=' + countryId;
+    return this.http.post<City>(url, new City(name), httpOptions).pipe(
+      tap((city: City) => console.log(`Added city w/ id=${city.id}`)),
+      catchError(this.handleError<City>('addCity'))
+    )
+  }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

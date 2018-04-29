@@ -1,0 +1,29 @@
+<div class="panel panel-default">
+  <div class="panel-heading"><b>Add City</b></div>
+  <div class="panel-body">
+    <div *ngIf="saved" class="alert alert-success" role="alert">
+      <p>{{message}}</p>
+      <a routerLink="/cities">Go back to city list</a>
+    </div>
+
+    <form *ngIf="!saved && loaded">
+      <div *ngFor="let error of errors" class="alert alert-danger" role="alert">
+        {{error}}
+      </div>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Name" #name>
+      </div>
+      <label for="continent">Country</label>
+      <select id="continent" class="form-control" #country>
+        <option selected value="">Choose...</option>
+        <option *ngFor="let country of countries" value="{{country.id}}">{{country.name}}</option>
+      </select>
+
+      <button type="submit" class="btn btn-success" (click)="save(name.value, country.value)">Save</button>
+    </form>
+
+    <div *ngIf="!loaded" class="loader"></div>
+
+  </div>
+</div>

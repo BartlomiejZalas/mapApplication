@@ -7,6 +7,7 @@ import {CountriesComponent} from "./countries/countries.component";
 import {CitiesComponent} from "./cities/cities.component";
 import {ContinentsAddComponent} from "./continents/continents.add.component";
 import {CountriesAddComponent} from "./countries/countries.add.component";
+import {CitiesAddComponent} from "./cities/cities.add.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -15,7 +16,8 @@ const routes: Routes = [
   {path: 'continents/add', component: ContinentsAddComponent},
   {path: 'countries', component: CountriesComponent},
   {path: 'countries/add', component: CountriesAddComponent},
-  {path: 'cities', component: CitiesComponent}
+  {path: 'cities', component: CitiesComponent},
+  {path: 'cities/add', component: CitiesAddComponent}
 ];
 
 @NgModule({
