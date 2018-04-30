@@ -90,7 +90,7 @@ public class CitiesFinderTest {
     }
 
     @Test(expected = ElementNotFoundException.class)
-    public void getAll_shouldReturnError_whenIncorrectContinentAndCorrectCountryGiven() throws Exception {
+    public void findCities_shouldReturnError_whenIncorrectContinentAndCorrectCountryGiven() throws Exception {
         Optional<Long> continentId = Optional.of(1L);
         Optional<Long> countryId = Optional.of(1L);
 
@@ -98,7 +98,7 @@ public class CitiesFinderTest {
     }
 
     @Test(expected = ElementNotFoundException.class)
-    public void getAll_shouldReturnError_whenIncorrectCountryAndCorrectContinentGiven() throws Exception {
+    public void findCities_shouldReturnError_whenIncorrectCountryAndCorrectContinentGiven() throws Exception {
         given(continentsRepository.findById(1L)).willReturn(Optional.of(new Continent()));
         Optional<Long> continentId = Optional.of(1L);
         Optional<Long> countryId = Optional.of(1L);
@@ -107,7 +107,7 @@ public class CitiesFinderTest {
     }
 
     @Test(expected = ElementNotFoundException.class)
-    public void getAll_shouldReturnError_whenIncorrectContinentGiven() throws Exception {
+    public void findCities_shouldReturnError_whenIncorrectContinentGiven() throws Exception {
         Optional<Long> continentId = Optional.of(1L);
         Optional<Long> countryId = Optional.empty();
 
@@ -115,7 +115,7 @@ public class CitiesFinderTest {
     }
 
     @Test(expected = ElementNotFoundException.class)
-    public void getAll_shouldReturnError_whenIncorrectCountryGiven() throws Exception {
+    public void findCities_shouldReturnError_whenIncorrectCountryGiven() throws Exception {
         Optional<Long> continentId = Optional.empty();
         Optional<Long> countryId = Optional.of(1L);
 
@@ -123,7 +123,7 @@ public class CitiesFinderTest {
     }
 
     @Test(expected = ElementNotFoundException.class)
-    public void getAll_shouldReturnError_whenContinentAndCountryIdsNotMatch() throws Exception {
+    public void findCities_shouldReturnError_whenContinentAndCountryIdsNotMatch() throws Exception {
         Continent europe = new Continent(1L, "Europe", null);
         Continent asia = new Continent(3L, "Asia", null);
         given(continentsRepository.findById(3L)).willReturn(Optional.of(asia));
