@@ -79,7 +79,7 @@ public class CitiesFinderTest {
     @Test
     public void findCities_shouldReturnCitiesFromGiveContinentAndCountry_whenContinentAndCountryGivenInParams() throws Exception {
         given(continentsRepository.findById(1L)).willReturn(Optional.of(new Continent()));
-        given(countriesRepository.findById(1L)).willReturn(Optional.of(new Country()));
+        given(countriesRepository.findById(1L)).willReturn(Optional.of(new Country(1L, "poland", new Continent(1L, "", null), null)));
         given(citiesRepository.findByCountryIdAndCountryContinentId(1L, 1L)).willReturn(CITIES);
         Optional<Long> continentId = Optional.of(1L);
         Optional<Long> countryId = Optional.of(1L);
@@ -118,6 +118,18 @@ public class CitiesFinderTest {
     public void getAll_shouldReturnError_whenIncorrectCountryGiven() throws Exception {
         Optional<Long> continentId = Optional.empty();
         Optional<Long> countryId = Optional.of(1L);
+
+        citiesFinder.findCities(continentId, countryId);
+    }
+
+    @Test(expected = ElementNotFoundException.class)
+    public void getAll_shouldReturnError_whenContinentAndCountryIdsNotMatch() throws Exception {
+        Continent europe = new Continent(1L, "Europe", null);
+        Continent asia = new Continent(3L, "Asia", null);
+        given(continentsRepository.findById(3L)).willReturn(Optional.of(asia));
+        given(countriesRepository.findById(2L)).willReturn(Optional.of(new Country(2L, "Poland", europe, null)));
+        Optional<Long> continentId = Optional.of(3L);
+        Optional<Long> countryId = Optional.of(2L);
 
         citiesFinder.findCities(continentId, countryId);
     }

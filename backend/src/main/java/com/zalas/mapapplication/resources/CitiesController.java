@@ -63,8 +63,7 @@ public class CitiesController {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<City> save(@RequestBody City city, @RequestParam long countryId, UriComponentsBuilder ucb
-    ) throws ElementNotFoundException {
+    public ResponseEntity<City> save(@RequestBody City city, @RequestParam long countryId, UriComponentsBuilder ucb) throws ElementNotFoundException {
         validateCountry(countryId);
 
         Country parentCountry = countriesRepository.findById(countryId).get();

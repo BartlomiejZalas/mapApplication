@@ -28,6 +28,7 @@ public class CitiesFinder {
         if (continentId.isPresent() && countryId.isPresent()) {
             validateContinent(continentId.get());
             validateCountry(countryId.get());
+            validateCountryContinentConsistency(countryId.get(), continentId.get());
             return citiesRepository.findByCountryIdAndCountryContinentId(countryId.get(), continentId.get());
         } else if (continentId.isPresent()) {
             validateContinent(continentId.get());
@@ -37,6 +38,12 @@ public class CitiesFinder {
             return citiesRepository.findByCountryId(countryId.get());
         }
         return citiesRepository.findAll();
+    }
+
+    private void validateCountryContinentConsistency(long countryId, long continentId) throws ElementNotFoundException {
+        if (countriesRepository.findById(countryId).get().getContinent().getId() != continentId) {
+            throw new ElementNotFoundException("Country with id=" + countryId + " is not on continent with id=" + continentId + "!");
+        }
     }
 
     private void validateCountry(long countryId) throws ElementNotFoundException {
