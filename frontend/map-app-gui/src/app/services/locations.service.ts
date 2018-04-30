@@ -12,7 +12,7 @@ const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json
 
 @Injectable()
 export class LocationsService {
-  private apiUrl = '/api/';
+  private apiUrl = 'http://localhost:8080/';
 
   constructor(private http: HttpClient) {
   }

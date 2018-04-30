@@ -18,6 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(ContinentsController.CONTINENTS_PATH)
+@CrossOrigin(origins = "http://localhost:4200")
 public class ContinentsController {
 
     static final String CONTINENTS_PATH = "/continents";

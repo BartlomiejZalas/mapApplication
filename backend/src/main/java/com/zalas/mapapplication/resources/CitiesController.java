@@ -21,6 +21,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(CitiesController.CITIES_PATH)
+@CrossOrigin(origins = "http://localhost:4200")
 public class CitiesController {
     static final String CITIES_PATH = "cities";
 

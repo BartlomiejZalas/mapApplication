@@ -20,6 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(CountriesController.COUNTRIES_PATH)
+@CrossOrigin(origins = "http://localhost:4200")
 public class CountriesController {
     static final String COUNTRIES_PATH = "countries";
 
