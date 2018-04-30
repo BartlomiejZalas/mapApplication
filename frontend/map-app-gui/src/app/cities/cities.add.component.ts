@@ -36,10 +36,10 @@ export class CitiesAddComponent implements OnInit {
       this.errors.push("Country cannot be empty!");
       return
     }
-    this.locationsService.addCity(name, Number(countryId)).subscribe(city => {
-      this.saved = true;
-      this.message = 'City with id: ' + city.id + ' saved!';
-    });
+    this.locationsService.addCity(name, Number(countryId)).subscribe(
+      city => {this.saved = true; this.message = 'City with id: ' + city.id + ' saved!'},
+      err => this.errors.push("Save error: " + err)
+    );
   }
 
 

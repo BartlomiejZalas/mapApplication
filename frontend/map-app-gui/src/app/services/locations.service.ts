@@ -1,12 +1,12 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
 import {catchError, tap} from "rxjs/operators";
-import {of} from "rxjs/observable/of";
 import {Location} from "../model/location";
 import {Continent} from "app/model/continent";
 import {Country} from "../model/country";
 import {City} from "../model/city";
+import 'rxjs/add/observable/throw';
 
 const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
 
@@ -18,8 +18,8 @@ export class LocationsService {
   }
 
   getLocations(type: string, continentId: number = null, countryId: number = null,): Observable<Location[]> {
-    let continentParam = continentId == null ? null : 'continentId='+continentId;
-    let countryParam = countryId == null ? null : 'countryId='+countryId;
+    let continentParam = continentId == null ? null : 'continentId=' + continentId;
+    let countryParam = countryId == null ? null : 'countryId=' + countryId;
     let additionalParams = [continentParam, countryParam].filter(v => v != null).join('&');
     let url = this.apiUrl + type + '?' + additionalParams;
 
@@ -28,7 +28,7 @@ export class LocationsService {
     return this.http.get<Location[]>(url)
       .pipe(
         tap(locations => console.log('Fetched locations:', locations)),
-        catchError(this.handleError('get' + type, []))
+        catchError(this.handleError('get' + type))
       );
   }
 
@@ -36,7 +36,7 @@ export class LocationsService {
     const url = this.apiUrl + locationType + '/' + locationId;
     return this.http.delete<Location>(url).pipe(
       tap(_ => console.log(`Deleted location id=${locationId}`)),
-      catchError(this.handleError<Location>('removeLocation'))
+      catchError(this.handleError('removeLocation'))
     );
   }
 
@@ -44,7 +44,7 @@ export class LocationsService {
     const url = this.apiUrl + 'continents';
     return this.http.post<Continent>(url, new Continent(0, name), httpOptions).pipe(
       tap((continent: Continent) => console.log(`Added continent w/ id=${continent.id}`)),
-      catchError(this.handleError<Continent>('addContinent'))
+      catchError(this.handleError('addContinent'))
     )
   }
 
@@ -52,7 +52,7 @@ export class LocationsService {
     const url = this.apiUrl + 'countries?continentId=' + continentId;
     return this.http.post<Continent>(url, new Country(name), httpOptions).pipe(
       tap((country: Continent) => console.log(`Added country w/ id=${country.id}`)),
-      catchError(this.handleError<Continent>('addCountry'))
+      catchError(this.handleError('addCountry'))
     )
   }
 
@@ -61,14 +61,19 @@ export class LocationsService {
     const url = this.apiUrl + 'cities?countryId=' + countryId;
     return this.http.post<City>(url, new City(name), httpOptions).pipe(
       tap((city: City) => console.log(`Added city w/ id=${city.id}`)),
-      catchError(this.handleError<City>('addCity'))
+      catchError(this.handleError('addCity'))
     )
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      return of(result as T);
-    };
+  private handleError(operation: String) {
+    return (err: any) => {
+      let errMsg = `error in ${operation}()`;
+      console.error(`${errMsg}:`, err);
+      if (err instanceof HttpErrorResponse) {
+        console.error(`status: ${err.status}, ${err.statusText}`);
+        errMsg = err.message;
+      }
+      return Observable.throw(errMsg);
+    }
   }
 }

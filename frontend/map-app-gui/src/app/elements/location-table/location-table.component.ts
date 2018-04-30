@@ -40,10 +40,10 @@ export class LocationTableComponent implements OnInit {
 
   private getLocations() {
     this.loading = true;
-    this.locationService.getLocations(this.locationType, this.filterContinentValue, this.filterCountryValue).subscribe(locations => {
-      this.locations = locations;
-      this.loading = false;
-    });
+    this.locationService.getLocations(this.locationType, this.filterContinentValue, this.filterCountryValue).subscribe(
+      locations => {this.locations = locations; this.loading = false},
+      err => alert("Error: " + err)
+    );
   }
 
   updateContinentFilter(continentId: string) {
@@ -58,9 +58,9 @@ export class LocationTableComponent implements OnInit {
 
   remove(location: Location): void {
     this.loading = true;
-    this.locationService.removeLocation(this.locationType, location.id).subscribe(locations => {
-      this.getLocations()
-    });
-
+    this.locationService.removeLocation(this.locationType, location.id).subscribe(
+      _ => this.getLocations(),
+      err => alert("Error: " + err)
+    );
   }
 }

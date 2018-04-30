@@ -23,10 +23,10 @@ export class ContinentsAddComponent implements OnInit {
       this.errors.push("Continent name cannot be empty!");
       return
     }
-    this.locationsService.addContinent(continentName).subscribe(continent => {
-      this.saved = true;
-      this.message = 'Continent with id: ' + continent.id + ' saved!';
-    });
+    this.locationsService.addContinent(continentName).subscribe(
+      continent => {this.saved = true; this.message = 'Continent with id: ' + continent.id + ' saved!'},
+      err => this.errors.push("Save error: " + err)
+      );
   }
 
 
